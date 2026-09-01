@@ -47,11 +47,13 @@ export default function DocumentationCreate() {
     // Album mode submit
     const [albumMeta, setAlbumMeta] = useState({ title: '', description: '', taken_at: '' });
     const [albumProcessing, setAlbumProcessing] = useState(false);
+    const [previewLoading, setPreviewLoading] = useState(false);
 
     async function handleAlbumFiles(files: FileList | null) {
         if (!files) return;
         const arr = Array.from(files);
         setAlbumFiles(arr);
+        setPreviewLoading(true);
         const previews = await Promise.all(arr.map(async f => {
             const ext = f.name.split('.').pop()?.toLowerCase();
             if (ext === 'heic' || ext === 'heif') {
@@ -63,6 +65,7 @@ export default function DocumentationCreate() {
             return URL.createObjectURL(f);
         }));
         setAlbumPreviews(previews);
+        setPreviewLoading(false);
     }
 
     function submitAlbum(e: React.FormEvent) {
@@ -90,12 +93,10 @@ export default function DocumentationCreate() {
     const [bulkProcessing, setBulkProcessing] = useState(false);
     const [sharedDate, setSharedDate] = useState('');
 
-    function handleBulkFiles(files: FileList | null) {
-        if (!files) return;
-        const arr = Array.from(files);
     async function handleBulkFiles(files: FileList | null) {
         if (!files) return;
         const arr = Array.from(files);
+        setPreviewLoading(true);
         const items = await Promise.all(arr.map(async f => {
             const ext = f.name.split('.').pop()?.toLowerCase();
             let preview = '';
@@ -115,7 +116,7 @@ export default function DocumentationCreate() {
             };
         }));
         setBulkItems(items);
-    }
+        setPreviewLoading(false);
     }
 
     function submitBulk(e: React.FormEvent) {
@@ -238,7 +239,13 @@ export default function DocumentationCreate() {
                                 <Input type="file" accept="image/*" multiple onChange={e => handleAlbumFiles(e.target.files)} />
                                 <p className="text-xs text-slate-400">Pilih beberapa foto sekaligus. Foto pertama jadi cover.</p>
                             </div>
-                            {albumPreviews.length > 0 && (
+                            {previewLoading && (
+                                <div className="flex items-center gap-2 text-sm text-slate-500">
+                                    <Loader2 className="w-4 h-4 animate-spin text-emerald-600" />
+                                    <span>Memproses foto...</span>
+                                </div>
+                            )}
+                            {!previewLoading && albumPreviews.length > 0 && (
                                 <div className="grid grid-cols-4 gap-2">
                                     {albumPreviews.map((src, i) => (
                                         <div key={i} className={`relative aspect-square rounded-lg overflow-hidden border-2 ${i === 0 ? 'border-emerald-500' : 'border-slate-200'}`}>
@@ -279,6 +286,12 @@ export default function DocumentationCreate() {
                                 <div className="flex-1 min-w-[200px] space-y-2">
                                     <Label>Pilih foto-foto <span className="text-red-500">*</span></Label>
                                     <Input type="file" accept="image/*" multiple onChange={e => handleBulkFiles(e.target.files)} />
+                                    {previewLoading && (
+                                        <div className="flex items-center gap-2 text-sm text-slate-500">
+                                            <Loader2 className="w-4 h-4 animate-spin text-emerald-600" />
+                                            <span>Memproses foto...</span>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
 
