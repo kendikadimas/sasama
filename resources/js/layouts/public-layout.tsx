@@ -21,8 +21,8 @@ export default function PublicLayout({ children }: PropsWithChildren) {
                 <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
                     <Link href="/" className="flex items-center gap-2">
                         <img
-                            src="/assets/logo/tegar beriman.png"
-                            alt="Logo Desa Bojongjengkol"
+                            src="/assets/logo/Logo.png"
+                                    alt="Logo Desa Bojongjengkol"
                             className="h-10 w-10 object-contain"
                         />
                         <img
@@ -99,7 +99,7 @@ export default function PublicLayout({ children }: PropsWithChildren) {
                         <div>
                             <div className="mb-1 flex items-center gap-2">
                                 <img
-                                    src="/assets/logo/tegar beriman.png"
+                                    src="/assets/logo/Logo.png"
                                     alt="Logo Kabupaten Bogor"
                                     className="h-9 w-9 object-contain mix-blend-screen"
                                 />

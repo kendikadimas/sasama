@@ -241,7 +241,7 @@ export default function Home({ programs, documentations }: HomeProps) {
                                     )}
                                     <div className="p-5">
                                         <h3 className="mb-2 font-bold text-slate-900">{program.title}</h3>
-                                        <p className="line-clamp-3 text-sm text-slate-500">{program.description}</p>
+                                        <p className="text-sm text-slate-500">{program.description}</p>
                                     </div>
                                 </div>
                             ))}

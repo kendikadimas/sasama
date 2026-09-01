@@ -22,7 +22,6 @@ yarn-error.log
 /auth.json
 /public/build
 /public/hot
-/public/assets
 /public/images
 /public/design.jpeg
 *.zip
