@@ -1,0 +1,10 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=$HOME/sasama
+    - /usr/local/bin/composer install --no-dev --optimize-autoloader --quiet --working-dir=$DEPLOYPATH
+    - $DEPLOYPATH/artisan migrate --force
+    - $DEPLOYPATH/artisan config:cache
+    - $DEPLOYPATH/artisan view:cache
+    - cp -r $DEPLOYPATH/public/build $HOME/public_html/build
+    - rm -f $HOME/public_html/hot

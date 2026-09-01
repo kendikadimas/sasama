@@ -16,22 +16,8 @@ jobs:
 
       - run: npm ci && npm run build
 
-      - name: Deploy via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.FTP_USER }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./
-          server-dir: /sasama/
-          exclude: |
-            **/.git*
-            **/.git*/**
-            **/node_modules/**
-            **/vendor/**
-            .env
-            .env.*
-            *.zip
-            public/assets/**
-            public/images/**
-            public/storage/**
+      - name: Trigger cPanel Git Deploy
+        run: |
+          curl -sk -u "${{ secrets.CPANEL_USER }}:${{ secrets.CPANEL_PASSWORD }}" \
+            "https://${{ secrets.SSH_HOST }}:2083/execute/VersionControl/update" \
+            -d "repository=${{ secrets.CPANEL_REPO_PATH }}" | grep -E '"status"|"errors"'
