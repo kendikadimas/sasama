@@ -27,7 +27,7 @@ class DocumentationController extends Controller
             'title' => 'nullable|string|max:255',
             'description' => 'nullable|string',
             'taken_at' => 'nullable|date',
-            'image' => 'required|image|max:10240',
+            'image' => 'required|mimes:jpg,jpeg,png,gif,webp|max:10240',
         ]);
 
         $path = $request->file('image')->store('documentations', 'public');
@@ -55,7 +55,7 @@ class DocumentationController extends Controller
             'title' => 'nullable|string|max:255',
             'description' => 'nullable|string',
             'taken_at' => 'nullable|date',
-            'image' => 'nullable|image|max:10240',
+            'image' => 'nullable|mimes:jpg,jpeg,png,gif,webp|max:10240',
         ]);
 
         if ($request->hasFile('image')) {

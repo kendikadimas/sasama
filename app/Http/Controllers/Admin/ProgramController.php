@@ -29,7 +29,7 @@ class ProgramController extends Controller
             'description' => 'required|string',
             'content' => 'nullable|string',
             'is_active' => 'boolean',
-            'image' => 'nullable|image|max:10240',
+            'image' => 'nullable|mimes:jpg,jpeg,png,gif,webp|max:10240',
         ]);
 
         $path = null;
@@ -63,7 +63,7 @@ class ProgramController extends Controller
             'description' => 'required|string',
             'content' => 'nullable|string',
             'is_active' => 'boolean',
-            'image' => 'nullable|image|max:10240',
+            'image' => 'nullable|mimes:jpg,jpeg,png,gif,webp|max:10240',
         ]);
 
         if ($request->hasFile('image')) {
