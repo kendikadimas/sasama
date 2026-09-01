@@ -226,13 +226,13 @@ export default function Home({ programs, documentations }: HomeProps) {
                             {programs.map((program) => (
                                 <div
                                     key={program.id}
-                                    className="overflow-hidden rounded-xl bg-white shadow-sm ring-1 ring-slate-100 transition-shadow hover:shadow-md"
+                                    className="rounded-xl bg-white shadow-sm ring-1 ring-slate-100 transition-shadow hover:shadow-md"
                                 >
                                     {program.image_path ? (
                                         <img
                                             src={`/storage/${program.image_path}`}
                                             alt={program.title}
-                                            className="h-44 w-full object-contain bg-white p-2"
+                                            className="h-44 w-full object-contain bg-white p-2 rounded-t-xl"
                                         />
                                     ) : (
                                         <div className="flex h-44 w-full items-center justify-center bg-emerald-50">
