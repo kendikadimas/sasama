@@ -18,6 +18,8 @@ jobs:
 
       - name: Trigger cPanel Git Deploy
         run: |
-          curl -sk -u "${{ secrets.CPANEL_USER }}:${{ secrets.CPANEL_PASSWORD }}" \
+          RESPONSE=$(curl -sk -u "${{ secrets.CPANEL_USER }}:${{ secrets.CPANEL_PASSWORD }}" \
             "https://${{ secrets.SSH_HOST }}:2083/execute/VersionControl/update" \
-            -d "repository=${{ secrets.CPANEL_REPO_PATH }}" | grep -E '"status"|"errors"'
+            -d "repository=${{ secrets.CPANEL_REPO_PATH }}")
+          echo "$RESPONSE"
+          echo "$RESPONSE" | grep -q '"status":1' || (echo "Deploy failed: $RESPONSE" && exit 1)
