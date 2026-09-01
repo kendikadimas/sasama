@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { ArrowLeft, Save, Images, SplitSquareHorizontal, Image, Loader2 } from 'lucide-react';
+import { ArrowLeft, Save, Images, SplitSquareHorizontal, Image, Loader2, X } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Dashboard', href: '/dashboard' },
@@ -66,6 +66,11 @@ export default function DocumentationCreate() {
         }));
         setAlbumPreviews(previews);
         setPreviewLoading(false);
+    }
+
+    function removeAlbumFile(index: number) {
+        setAlbumFiles(f => f.filter((_, i) => i !== index));
+        setAlbumPreviews(p => p.filter((_, i) => i !== index));
     }
 
     function submitAlbum(e: React.FormEvent) {
@@ -257,6 +262,13 @@ export default function DocumentationCreate() {
                                                   </div>
                                             }
                                             {i === 0 && <span className="absolute bottom-0 left-0 right-0 bg-emerald-500 text-white text-[10px] text-center py-0.5">Cover</span>}
+                                            <button
+                                                type="button"
+                                                onClick={() => removeAlbumFile(i)}
+                                                className="absolute top-1 right-1 bg-black/60 hover:bg-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center transition-colors"
+                                            >
+                                                <X className="w-3 h-3" />
+                                            </button>
                                         </div>
                                     ))}
                                 </div>
