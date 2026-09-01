@@ -12,7 +12,7 @@ class DocumentationController extends Controller
     public function index()
     {
         return Inertia::render('Admin/Documentations/Index', [
-            'documentations' => Documentation::latest()->paginate(12),
+            'documentations' => Documentation::withCount('images')->latest()->paginate(12),
         ]);
     }
 
@@ -23,21 +23,68 @@ class DocumentationController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'title' => 'nullable|string|max:255',
-            'description' => 'nullable|string',
-            'taken_at' => 'nullable|date',
-            'image' => 'required|file|max:10240',
-        ]);
+        $mode = $request->input('mode', 'single');
 
-        $path = $request->file('image')->store('documentations', 'public');
+        if ($mode === 'album') {
+            $request->validate([
+                'title'       => 'nullable|string|max:255',
+                'description' => 'nullable|string',
+                'taken_at'    => 'nullable|date',
+                'images'      => 'required|array|min:1',
+                'images.*'    => 'required|file|max:10240',
+            ]);
 
-        Documentation::create([
-            'title' => $validated['title'] ?? null,
-            'description' => $validated['description'] ?? null,
-            'taken_at' => $validated['taken_at'] ?? null,
-            'image_path' => $path,
-        ]);
+            $files = $request->file('images');
+            $doc = Documentation::create([
+                'title'       => $request->input('title'),
+                'description' => $request->input('description'),
+                'taken_at'    => $request->input('taken_at'),
+                'image_path'  => $files[0]->store('documentations', 'public'),
+            ]);
+
+            foreach (array_slice($files, 1) as $i => $file) {
+                $doc->images()->create([
+                    'image_path' => $file->store('documentations', 'public'),
+                    'sort_order' => $i + 1,
+                ]);
+            }
+
+        } elseif ($mode === 'bulk') {
+            $request->validate([
+                'items'            => 'required|array|min:1',
+                'items.*.title'    => 'nullable|string|max:255',
+                'items.*.taken_at' => 'nullable|date',
+                'images'           => 'required|array|min:1',
+                'images.*'         => 'required|file|max:10240',
+            ]);
+
+            $files = $request->file('images');
+            $items = $request->input('items');
+
+            foreach ($files as $i => $file) {
+                Documentation::create([
+                    'title'      => $items[$i]['title'] ?? null,
+                    'taken_at'   => $items[$i]['taken_at'] ?? null,
+                    'image_path' => $file->store('documentations', 'public'),
+                ]);
+            }
+
+        } else {
+            // single
+            $request->validate([
+                'title'       => 'nullable|string|max:255',
+                'description' => 'nullable|string',
+                'taken_at'    => 'nullable|date',
+                'image'       => 'required|file|max:10240',
+            ]);
+
+            Documentation::create([
+                'title'       => $request->input('title'),
+                'description' => $request->input('description'),
+                'taken_at'    => $request->input('taken_at'),
+                'image_path'  => $request->file('image')->store('documentations', 'public'),
+            ]);
+        }
 
         return redirect()->route('documentations.index')->with('success', 'Dokumentasi berhasil ditambahkan.');
     }
@@ -52,10 +99,10 @@ class DocumentationController extends Controller
     public function update(Request $request, Documentation $documentation)
     {
         $validated = $request->validate([
-            'title' => 'nullable|string|max:255',
+            'title'       => 'nullable|string|max:255',
             'description' => 'nullable|string',
-            'taken_at' => 'nullable|date',
-            'image' => 'nullable|file|max:10240',
+            'taken_at'    => 'nullable|date',
+            'image'       => 'nullable|file|max:10240',
         ]);
 
         if ($request->hasFile('image')) {
@@ -63,9 +110,9 @@ class DocumentationController extends Controller
         }
 
         $documentation->update([
-            'title' => $validated['title'] ?? null,
+            'title'       => $validated['title'] ?? null,
             'description' => $validated['description'] ?? null,
-            'taken_at' => $validated['taken_at'] ?? null,
+            'taken_at'    => $validated['taken_at'] ?? null,
         ]);
 
         return redirect()->route('documentations.index')->with('success', 'Dokumentasi berhasil diperbarui.');

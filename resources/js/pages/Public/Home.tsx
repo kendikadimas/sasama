@@ -11,8 +11,12 @@ import {
     Recycle,
     ShoppingBag,
     Leaf,
+    ChevronLeft,
+    ChevronRight,
 } from 'lucide-react';
 import PublicLayout from '@/layouts/public-layout';
+
+interface DocImage { id: number; image_path: string; }
 
 interface HomeProps {
     programs: Array<{
@@ -28,6 +32,7 @@ interface HomeProps {
         description: string | null;
         image_path: string;
         taken_at: string | null;
+        images: DocImage[];
     }>;
 }
 
@@ -108,10 +113,17 @@ const PILLARS = [
 ];
 
 export default function Home({ programs, documentations }: HomeProps) {
-    const [lightbox, setLightbox] = useState<{ src: string; title: string | null } | null>(null);
+    const [lightbox, setLightbox] = useState<{ slides: { src: string; title: string | null }[]; index: number } | null>(null);
     const [showAllDocs, setShowAllDocs] = useState(false);
     const DOCS_INITIAL = 6;
     const visibleDocs = showAllDocs ? documentations : documentations.slice(0, DOCS_INITIAL);
+
+    function openDoc(doc: typeof documentations[0]) {
+        const slides = doc.images && doc.images.length > 0
+            ? [{ src: `/storage/${doc.image_path}`, title: doc.title }, ...doc.images.map(img => ({ src: `/storage/${img.image_path}`, title: doc.title }))]
+            : [{ src: `/storage/${doc.image_path}`, title: doc.title }];
+        setLightbox({ slides, index: 0 });
+    }
     return (
         <PublicLayout>
             <Head title="Beranda - SASAMA" />
@@ -136,7 +148,7 @@ export default function Home({ programs, documentations }: HomeProps) {
                             </h1>
                             <p className="mb-6 text-lg leading-relaxed text-white/75">
                                 Bersama SASAMA, wujudkan desa cerdas sampah <br className="hidden sm:block" />
-                                yang mandiri, bersih, dan berdaya.
+                                guna mewujudkan desa yang mandiri, bersih dan berdaya
                             </p>
                             <Link
                                 href="/potensi"
@@ -256,7 +268,7 @@ export default function Home({ programs, documentations }: HomeProps) {
                                 <button
                                     key={doc.id}
                                     type="button"
-                                    onClick={() => setLightbox({ src: `/storage/${doc.image_path}`, title: doc.title })}
+                                    onClick={() => openDoc(doc)}
                                     className="group relative aspect-video overflow-hidden rounded-xl bg-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500"
                                 >
                                     <img
@@ -300,14 +312,37 @@ export default function Home({ programs, documentations }: HomeProps) {
                     >
                         <X className="h-6 w-6" />
                     </button>
+                    {lightbox.slides.length > 1 && (
+                        <>
+                            <button
+                                type="button"
+                                onClick={e => { e.stopPropagation(); setLightbox(lb => lb && ({ ...lb, index: (lb.index - 1 + lb.slides.length) % lb.slides.length })); }}
+                                className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-2 text-white hover:bg-white/20"
+                                aria-label="Sebelumnya"
+                            >
+                                <ChevronLeft className="h-6 w-6" />
+                            </button>
+                            <button
+                                type="button"
+                                onClick={e => { e.stopPropagation(); setLightbox(lb => lb && ({ ...lb, index: (lb.index + 1) % lb.slides.length })); }}
+                                className="absolute right-14 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-2 text-white hover:bg-white/20"
+                                aria-label="Berikutnya"
+                            >
+                                <ChevronRight className="h-6 w-6" />
+                            </button>
+                        </>
+                    )}
                     <div className="max-h-[90vh] max-w-5xl" onClick={e => e.stopPropagation()}>
                         <img
-                            src={lightbox.src}
-                            alt={lightbox.title ?? ''}
+                            src={lightbox.slides[lightbox.index].src}
+                            alt={lightbox.slides[lightbox.index].title ?? ''}
                             className="max-h-[80vh] w-auto rounded-xl object-contain shadow-2xl"
                         />
-                        {lightbox.title && (
-                            <p className="mt-3 text-center text-sm font-medium text-white/80">{lightbox.title}</p>
+                        {lightbox.slides[lightbox.index].title && (
+                            <p className="mt-3 text-center text-sm font-medium text-white/80">{lightbox.slides[lightbox.index].title}</p>
+                        )}
+                        {lightbox.slides.length > 1 && (
+                            <p className="mt-1 text-center text-xs text-white/50">{lightbox.index + 1} / {lightbox.slides.length}</p>
                         )}
                     </div>
                 </div>

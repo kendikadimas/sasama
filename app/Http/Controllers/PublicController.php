@@ -16,7 +16,7 @@ class PublicController extends Controller
     {
         return Inertia::render('Public/Home', [
             'programs' => Program::where('is_active', true)->latest()->get(),
-            'documentations' => Documentation::latest()->get(),
+            'documentations' => Documentation::with('images')->latest()->get(),
         ]);
     }
 

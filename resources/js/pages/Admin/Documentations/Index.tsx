@@ -1,7 +1,7 @@
 import AppLayout from '@/layouts/app-layout';
 import { Head, Link, router, usePage } from '@inertiajs/react';
 import { type BreadcrumbItem } from '@/types';
-import { Plus, Pencil, Trash2, Camera, CalendarDays } from 'lucide-react';
+import { Plus, Pencil, Trash2, Camera, CalendarDays, Images } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export default function DocumentationIndex({ documentations }: { documentations: any }) {
@@ -60,6 +60,11 @@ export default function DocumentationIndex({ documentations }: { documentations:
                                         </div>
                                     )}
                                     <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-gradient-to-r from-emerald-500 to-teal-500" />
+                                    {doc.images_count > 0 && (
+                                        <div className="absolute top-2 right-2 flex items-center gap-1 bg-black/60 text-white text-xs px-2 py-0.5 rounded-full">
+                                            <Images className="w-3 h-3" /> {doc.images_count + 1}
+                                        </div>
+                                    )}
                                 </div>
 
                                 <div className="p-4 flex-1 flex flex-col gap-2">

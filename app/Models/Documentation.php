@@ -11,4 +11,9 @@ class Documentation extends Model
     protected $casts = [
         'taken_at' => 'date',
     ];
+
+    public function images()
+    {
+        return $this->hasMany(DocumentationImage::class)->orderBy('sort_order');
+    }
 }
