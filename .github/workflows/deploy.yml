@@ -18,7 +18,8 @@ jobs:
 
       - name: Trigger cPanel Git Deploy
         run: |
-          RESPONSE=$(curl -sk -u "${{ secrets.CPANEL_USER }}:${{ secrets.CPANEL_PASSWORD }}" \
+          RESPONSE=$(curl -sk \
+            -H "Authorization: cpanel ${{ secrets.CPANEL_USER }}:${{ secrets.CPANEL_TOKEN }}" \
             "https://${{ secrets.SSH_HOST }}:2083/execute/VersionControl/update" \
             -d "repository=${{ secrets.CPANEL_REPO_PATH }}")
           echo "$RESPONSE"
