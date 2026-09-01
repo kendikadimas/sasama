@@ -51,7 +51,10 @@ export default function DocumentationCreate() {
         if (!files) return;
         const arr = Array.from(files);
         setAlbumFiles(arr);
-        setAlbumPreviews(arr.map(f => URL.createObjectURL(f)));
+        setAlbumPreviews(arr.map(f => {
+            const ext = f.name.split('.').pop()?.toLowerCase();
+            return (ext === 'heic' || ext === 'heif') ? '' : URL.createObjectURL(f);
+        }));
     }
 
     function submitAlbum(e: React.FormEvent) {
@@ -82,12 +85,16 @@ export default function DocumentationCreate() {
     function handleBulkFiles(files: FileList | null) {
         if (!files) return;
         const arr = Array.from(files);
-        setBulkItems(arr.map(f => ({
-            title: f.name.replace(/\.[^/.]+$/, ''),
-            taken_at: sharedDate,
-            file: f,
-            preview: URL.createObjectURL(f),
-        })));
+        setBulkItems(arr.map(f => {
+            const ext = f.name.split('.').pop()?.toLowerCase();
+            const preview = (ext === 'heic' || ext === 'heif') ? '' : URL.createObjectURL(f);
+            return {
+                title: f.name.replace(/\.[^/.]+$/, ''),
+                taken_at: sharedDate,
+                file: f,
+                preview,
+            };
+        }));
     }
 
     function submitBulk(e: React.FormEvent) {
@@ -214,7 +221,13 @@ export default function DocumentationCreate() {
                                 <div className="grid grid-cols-4 gap-2">
                                     {albumPreviews.map((src, i) => (
                                         <div key={i} className={`relative aspect-square rounded-lg overflow-hidden border-2 ${i === 0 ? 'border-emerald-500' : 'border-slate-200'}`}>
-                                            <img src={src} className="w-full h-full object-cover" alt="" />
+                                            {src
+                                                ? <img src={src} className="w-full h-full object-cover" alt="" />
+                                                : <div className="w-full h-full flex flex-col items-center justify-center bg-slate-100 text-slate-400 gap-1">
+                                                    <Image className="w-6 h-6" />
+                                                    <span className="text-[10px]">HEIC</span>
+                                                  </div>
+                                            }
                                             {i === 0 && <span className="absolute bottom-0 left-0 right-0 bg-emerald-500 text-white text-[10px] text-center py-0.5">Cover</span>}
                                         </div>
                                     ))}
@@ -254,7 +267,13 @@ export default function DocumentationCreate() {
                                     <div className="space-y-2 max-h-[60vh] overflow-y-auto pr-1">
                                         {bulkItems.map((item, i) => (
                                             <div key={i} className="flex gap-3 items-center bg-slate-50 rounded-xl p-3 border border-slate-100">
-                                                <img src={item.preview} className="w-16 h-16 object-cover rounded-lg shrink-0" alt="" />
+                                                {item.preview
+                                                    ? <img src={item.preview} className="w-16 h-16 object-cover rounded-lg shrink-0" alt="" />
+                                                    : <div className="w-16 h-16 rounded-lg shrink-0 bg-slate-100 flex flex-col items-center justify-center text-slate-400">
+                                                        <Image className="w-5 h-5" />
+                                                        <span className="text-[9px]">HEIC</span>
+                                                      </div>
+                                                }
                                                 <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-2">
                                                     <Input
                                                         placeholder="Judul (opsional)"
