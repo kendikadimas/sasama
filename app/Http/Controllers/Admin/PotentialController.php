@@ -67,7 +67,6 @@ class PotentialController extends Controller
     {
         $validated = $request->validate([
             'name'               => 'required|string|max:255',
-            'sector'             => 'required|in:pertanian,peternakan,perikanan,pariwisata,umkm,lainnya',
             'potential_group_id' => 'nullable|exists:potential_groups,id',
             'description'        => 'required|string',
             'lat'                => 'nullable|numeric|between:-90,90',
