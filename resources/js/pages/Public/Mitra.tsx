@@ -32,6 +32,7 @@ interface StoreProduct {
     description: string | null;
     wa_message: string | null;
     image_path: string | null;
+    images: { id: number; image_path: string }[];
 }
 
 interface MitraProps {
@@ -222,12 +223,74 @@ function BusinessModal({ biz, onClose }: { biz: Business; onClose: () => void })
     );
 }
 
+// ─── Store Product detail modal ───────────────────────────────────────────────
+
+function StoreProductModal({ product, onClose }: { product: StoreProduct; onClose: () => void }) {
+    const allImages = [
+        ...(product.image_path ? [{ id: 0, image_path: product.image_path }] : []),
+        ...(product.images ?? []),
+    ];
+    const [activeImg, setActiveImg] = useState(0);
+    return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={onClose}>
+            <div
+                className="relative w-full max-w-md bg-white rounded-3xl shadow-2xl overflow-hidden max-h-[90vh] overflow-y-auto"
+                onClick={(e) => e.stopPropagation()}
+            >
+                {allImages.length > 0 ? (
+                    <img src={`/storage/${allImages[activeImg].image_path}`} alt={product.name} className="w-full h-56 object-cover" />
+                ) : (
+                    <div className="w-full h-56 bg-emerald-50 flex items-center justify-center">
+                        <ImageOff className="h-12 w-12 text-emerald-200" />
+                    </div>
+                )}
+                {allImages.length > 1 && (
+                    <div className="flex gap-2 px-4 py-2 bg-black/40 absolute bottom-0 left-0 right-0">
+                        {allImages.map((img, i) => (
+                            <button
+                                key={img.id}
+                                onClick={() => setActiveImg(i)}
+                                className={`h-12 w-12 rounded-md overflow-hidden shrink-0 border-2 transition-all ${i === activeImg ? 'border-white' : 'border-transparent opacity-60 hover:opacity-100'}`}
+                            >
+                                <img src={`/storage/${img.image_path}`} alt="" className="h-full w-full object-cover" />
+                            </button>
+                        ))}
+                    </div>
+                )}
+                <button
+                    onClick={onClose}
+                    className="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/90 backdrop-blur flex items-center justify-center shadow text-slate-600 hover:text-slate-900"
+                >
+                    <X className="h-4 w-4" />
+                </button>
+                <div className="p-6">
+                    <h2 className="text-xl font-bold text-slate-900 mb-1">{product.name}</h2>
+                    <p className="text-lg font-semibold text-emerald-700 mb-3">{product.price}</p>
+                    {product.description && (
+                        <p className="text-sm text-slate-600 mb-4 leading-relaxed">{product.description}</p>
+                    )}
+                    <a
+                        href={`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(product.wa_message ?? `Halo, saya ingin memesan ${product.name} dari SASAMA Store.`)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-700 py-3 text-sm font-bold text-white transition hover:bg-emerald-600"
+                    >
+                        <MessageCircle className="h-4 w-4" />
+                        Beli Sekarang via WhatsApp
+                    </a>
+                </div>
+            </div>
+        </div>
+    );
+}
+
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function Mitra({ businesses, categories, featured, storeProducts }: MitraProps) {
     const [activeCategory, setActiveCategory] = useState<string>('Semua');
     const [search, setSearch] = useState('');
     const [selectedBiz, setSelectedBiz] = useState<Business | null>(null);
+    const [selectedProduct, setSelectedProduct] = useState<StoreProduct | null>(null);
 
     const filtered = businesses.filter((b) => {
         const matchCat = activeCategory === 'Semua' || b.category === activeCategory;
@@ -361,7 +424,7 @@ export default function Mitra({ businesses, categories, featured, storeProducts 
                                 <p className="font-medium text-slate-500">Belum ada produk store</p>
                             </div>
                         ) : storeProducts.map((product) => (
-                            <div key={product.id} className="overflow-hidden rounded-xl bg-white shadow-sm ring-1 ring-slate-100 transition-shadow hover:shadow-md">
+                            <div key={product.id} className="overflow-hidden rounded-xl bg-white shadow-sm ring-1 ring-slate-100 transition-shadow hover:shadow-md cursor-pointer" onClick={() => setSelectedProduct(product)}>
                                 {product.image_path ? (
                                     <img src={`/storage/${product.image_path}`} alt={product.name} className="h-44 w-full object-cover" />
                                 ) : (
@@ -376,6 +439,7 @@ export default function Mitra({ businesses, categories, featured, storeProducts 
                                         href={`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(product.wa_message ?? `Halo, saya ingin memesan ${product.name} dari SASAMA Store.`)}`}
                                         target="_blank"
                                         rel="noopener noreferrer"
+                                        onClick={e => e.stopPropagation()}
                                         className="flex w-full items-center justify-center gap-2 rounded-lg bg-emerald-700 py-2.5 text-sm font-bold text-white transition hover:bg-emerald-600"
                                     >
                                         <MessageCircle className="h-4 w-4" />
@@ -421,6 +485,7 @@ export default function Mitra({ businesses, categories, featured, storeProducts 
 
             {/* Detail popup */}
             {selectedBiz && <BusinessModal biz={selectedBiz} onClose={() => setSelectedBiz(null)} />}
+            {selectedProduct && <StoreProductModal product={selectedProduct} onClose={() => setSelectedProduct(null)} />}
         </PublicLayout>
     );
 }

@@ -1,11 +1,12 @@
 import AppLayout from '@/layouts/app-layout';
 import { Head, Link, useForm } from '@inertiajs/react';
 import { type BreadcrumbItem } from '@/types';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { ArrowLeft, Save } from 'lucide-react';
+import { ArrowLeft, Save, X } from 'lucide-react';
 
 interface StoreProduct {
     id: number;
@@ -16,6 +17,7 @@ interface StoreProduct {
     image_path: string | null;
     is_active: boolean;
     order: number;
+    images: { id: number; image_path: string }[];
 }
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -34,6 +36,8 @@ export default function StoreProductEdit({ product }: { product: StoreProduct })
         is_active: product.is_active,
         order: product.order,
         image: null as File | null,
+        extra_images: [] as File[],
+        delete_image_ids: [] as number[],
     });
 
     function submit(e: React.FormEvent) {
@@ -96,11 +100,42 @@ export default function StoreProductEdit({ product }: { product: StoreProduct })
                         </div>
 
                         <div className="space-y-2">
-                            <Label htmlFor="image">Foto Produk</Label>
+                            <Label htmlFor="image">Foto Utama</Label>
                             {product.image_path && (
                                 <img src={`/storage/${product.image_path}`} alt={product.name} className="h-24 w-36 object-cover rounded-lg mb-2" />
                             )}
                             <Input id="image" type="file" accept="image/*" onChange={e => setData('image', e.target.files?.[0] ?? null)} />
+                        </div>
+
+                        {product.images && product.images.length > 0 && (
+                            <div className="space-y-2">
+                                <Label>Foto Tambahan (saat ini)</Label>
+                                <div className="flex flex-wrap gap-2">
+                                    {product.images.map(img => (
+                                        <div key={img.id} className="relative">
+                                            <img src={`/storage/${img.image_path}`} className="h-20 w-20 object-cover rounded-lg" alt="" />
+                                            <button
+                                                type="button"
+                                                onClick={() => setData('delete_image_ids', data.delete_image_ids.includes(img.id)
+                                                    ? data.delete_image_ids.filter(id => id !== img.id)
+                                                    : [...data.delete_image_ids, img.id]
+                                                )}
+                                                className={`absolute -top-1 -right-1 w-5 h-5 rounded-full flex items-center justify-center text-white text-xs shadow ${data.delete_image_ids.includes(img.id) ? 'bg-red-500' : 'bg-slate-400 hover:bg-red-400'}`}
+                                            >
+                                                <X className="w-3 h-3" />
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
+                                {data.delete_image_ids.length > 0 && (
+                                    <p className="text-xs text-red-500">{data.delete_image_ids.length} foto akan dihapus saat disimpan.</p>
+                                )}
+                            </div>
+                        )}
+
+                        <div className="space-y-2">
+                            <Label htmlFor="extra_images">Tambah Foto Lagi <span className="text-slate-400 text-xs">(opsional)</span></Label>
+                            <Input id="extra_images" type="file" accept="image/*" multiple onChange={e => setData('extra_images', Array.from(e.target.files ?? []))} />
                         </div>
 
                         <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">

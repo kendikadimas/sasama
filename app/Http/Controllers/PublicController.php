@@ -38,7 +38,7 @@ class PublicController extends Controller
             'businesses' => $businesses,
             'categories' => $categories,
             'featured' => $featured,
-            'storeProducts' => StoreProduct::where('is_active', true)->orderBy('order')->get(),
+            'storeProducts' => StoreProduct::with('images')->where('is_active', true)->orderBy('order')->get(),
         ]);
     }
 }

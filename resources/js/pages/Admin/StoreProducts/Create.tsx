@@ -22,6 +22,7 @@ export default function StoreProductCreate() {
         is_active: true as boolean,
         order: 0 as number,
         image: null as File | null,
+        extra_images: [] as File[],
     });
 
     function submit(e: React.FormEvent) {
@@ -84,8 +85,13 @@ export default function StoreProductCreate() {
                         </div>
 
                         <div className="space-y-2">
-                            <Label htmlFor="image">Foto Produk</Label>
+                            <Label htmlFor="image">Foto Utama</Label>
                             <Input id="image" type="file" accept="image/*" onChange={e => setData('image', e.target.files?.[0] ?? null)} />
+                        </div>
+
+                        <div className="space-y-2">
+                            <Label htmlFor="extra_images">Foto Tambahan <span className="text-slate-400 text-xs">(opsional, bisa beberapa)</span></Label>
+                            <Input id="extra_images" type="file" accept="image/*" multiple onChange={e => setData('extra_images', Array.from(e.target.files ?? []))} />
                         </div>
 
                         <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
