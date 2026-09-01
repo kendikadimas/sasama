@@ -2,6 +2,7 @@ import AppLayout from '@/layouts/app-layout';
 import { Head, Link, useForm } from '@inertiajs/react';
 import { type BreadcrumbItem } from '@/types';
 import { FormEventHandler, useState, useRef } from 'react';
+import heic2any from 'heic2any';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -47,14 +48,21 @@ export default function DocumentationCreate() {
     const [albumMeta, setAlbumMeta] = useState({ title: '', description: '', taken_at: '' });
     const [albumProcessing, setAlbumProcessing] = useState(false);
 
-    function handleAlbumFiles(files: FileList | null) {
+    async function handleAlbumFiles(files: FileList | null) {
         if (!files) return;
         const arr = Array.from(files);
         setAlbumFiles(arr);
-        setAlbumPreviews(arr.map(f => {
+        const previews = await Promise.all(arr.map(async f => {
             const ext = f.name.split('.').pop()?.toLowerCase();
-            return (ext === 'heic' || ext === 'heif') ? '' : URL.createObjectURL(f);
+            if (ext === 'heic' || ext === 'heif') {
+                try {
+                    const blob = await heic2any({ blob: f, toType: 'image/jpeg', quality: 0.7 }) as Blob;
+                    return URL.createObjectURL(blob);
+                } catch { return ''; }
+            }
+            return URL.createObjectURL(f);
         }));
+        setAlbumPreviews(previews);
     }
 
     function submitAlbum(e: React.FormEvent) {
@@ -85,9 +93,20 @@ export default function DocumentationCreate() {
     function handleBulkFiles(files: FileList | null) {
         if (!files) return;
         const arr = Array.from(files);
-        setBulkItems(arr.map(f => {
+    async function handleBulkFiles(files: FileList | null) {
+        if (!files) return;
+        const arr = Array.from(files);
+        const items = await Promise.all(arr.map(async f => {
             const ext = f.name.split('.').pop()?.toLowerCase();
-            const preview = (ext === 'heic' || ext === 'heif') ? '' : URL.createObjectURL(f);
+            let preview = '';
+            if (ext === 'heic' || ext === 'heif') {
+                try {
+                    const blob = await heic2any({ blob: f, toType: 'image/jpeg', quality: 0.7 }) as Blob;
+                    preview = URL.createObjectURL(blob);
+                } catch { preview = ''; }
+            } else {
+                preview = URL.createObjectURL(f);
+            }
             return {
                 title: f.name.replace(/\.[^/.]+$/, ''),
                 taken_at: sharedDate,
@@ -95,6 +114,8 @@ export default function DocumentationCreate() {
                 preview,
             };
         }));
+        setBulkItems(items);
+    }
     }
 
     function submitBulk(e: React.FormEvent) {
