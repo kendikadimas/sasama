@@ -34,7 +34,7 @@ class PotentialController extends Controller
             'lat'                 => 'nullable|numeric|between:-90,90',
             'lng'                 => 'nullable|numeric|between:-180,180',
             'contact_info'        => 'nullable|string|max:255',
-            'image'               => 'nullable|mimes:jpg,jpeg,png,gif,webp|max:10240',
+            'image'               => 'nullable|file|max:10240',
         ]);
 
         $path = null;
@@ -72,7 +72,7 @@ class PotentialController extends Controller
             'lat'                => 'nullable|numeric|between:-90,90',
             'lng'                => 'nullable|numeric|between:-180,180',
             'contact_info'       => 'nullable|string|max:255',
-            'image'              => 'nullable|mimes:jpg,jpeg,png,gif,webp|max:10240',
+            'image'              => 'nullable|file|max:10240',
         ]);
 
         if ($request->hasFile('image')) {

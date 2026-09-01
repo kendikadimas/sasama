@@ -30,7 +30,7 @@ class StoreProductController extends Controller
             'wa_message' => 'nullable|string|max:500',
             'is_active'  => 'boolean',
             'order'      => 'integer',
-            'image'      => 'nullable|mimes:jpg,jpeg,png,gif,webp|max:10240',
+            'image'      => 'nullable|file|max:10240',
         ]);
 
         $path = null;
@@ -67,7 +67,7 @@ class StoreProductController extends Controller
             'wa_message' => 'nullable|string|max:500',
             'is_active'  => 'boolean',
             'order'      => 'integer',
-            'image'      => 'nullable|mimes:jpg,jpeg,png,gif,webp|max:10240',
+            'image'      => 'nullable|file|max:10240',
         ]);
 
         if ($request->hasFile('image')) {

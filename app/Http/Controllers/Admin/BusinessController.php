@@ -40,8 +40,8 @@ class BusinessController extends Controller
             'tiktok_url' => 'nullable|url|max:255',
             'halal_cert_number' => 'nullable|string|max:255',
             'halal_status' => 'nullable|string|max:100',
-            'image' => 'nullable|mimes:jpg,jpeg,png,gif,webp|max:10240',
-            'extra_images.*' => 'nullable|mimes:jpg,jpeg,png,gif,webp|max:10240',
+            'image' => 'nullable|file|max:10240',
+            'extra_images.*' => 'nullable|file|max:10240',
         ]);
 
         $path = null;
@@ -90,8 +90,8 @@ class BusinessController extends Controller
             'tiktok_url' => 'nullable|url|max:255',
             'halal_cert_number' => 'nullable|string|max:255',
             'halal_status' => 'nullable|string|max:100',
-            'image' => 'nullable|mimes:jpg,jpeg,png,gif,webp|max:10240',
-            'extra_images.*' => 'nullable|mimes:jpg,jpeg,png,gif,webp|max:10240',
+            'image' => 'nullable|file|max:10240',
+            'extra_images.*' => 'nullable|file|max:10240',
             'delete_image_ids' => 'nullable|array',
             'delete_image_ids.*' => 'integer|exists:business_images,id',
         ]);
