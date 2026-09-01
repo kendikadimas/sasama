@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { ArrowLeft, Save, Images, SplitSquareHorizontal, Image } from 'lucide-react';
+import { ArrowLeft, Save, Images, SplitSquareHorizontal, Image, Loader2 } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Dashboard', href: '/dashboard' },
@@ -112,9 +112,22 @@ export default function DocumentationCreate() {
         }).catch(() => setBulkProcessing(false));
     }
 
+    const isUploading = albumProcessing || bulkProcessing;
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Tambah Dokumentasi" />
+
+            {/* Upload loading overlay */}
+            {isUploading && (
+                <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/60 backdrop-blur-sm">
+                    <div className="bg-white rounded-2xl shadow-2xl px-10 py-8 flex flex-col items-center gap-4">
+                        <Loader2 className="w-10 h-10 text-emerald-600 animate-spin" />
+                        <p className="text-slate-800 font-semibold text-lg">Mengupload foto...</p>
+                        <p className="text-slate-400 text-sm text-center">Jangan tutup halaman ini.<br/>Proses mungkin memakan waktu untuk banyak foto.</p>
+                    </div>
+                </div>
+            )}
 
             <div className="p-6 md:p-8 space-y-6 bg-slate-50/50 min-h-full">
                 <div className="flex items-center gap-4">
