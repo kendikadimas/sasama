@@ -21,6 +21,6 @@ jobs:
           RESPONSE=$(curl -sk \
             -H "Authorization: cpanel ${{ secrets.CPANEL_USER }}:${{ secrets.CPANEL_TOKEN }}" \
             "https://${{ secrets.SSH_HOST }}:2083/execute/VersionControl/update" \
-            -d "repository=${{ secrets.CPANEL_REPO_PATH }}")
+            -d "repository_root=${{ secrets.CPANEL_REPO_PATH }}")
           echo "$RESPONSE"
           echo "$RESPONSE" | grep -q '"status":1' || (echo "Deploy failed: $RESPONSE" && exit 1)
