@@ -87,7 +87,11 @@ export default function PotentialCreate({ groups }: { groups: { id: number; name
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        post('/dashboard/potentials', { forceFormData: true });
+        post('/dashboard/potentials', {
+            forceFormData: true,
+            onError: (errors) => { console.error('CRUD Error:', errors); alert('Error: ' + JSON.stringify(errors)); },
+            onSuccess: () => console.log('CRUD Success'),
+        });
     };
 
     return (

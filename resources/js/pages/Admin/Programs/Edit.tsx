@@ -26,7 +26,11 @@ export default function ProgramEdit({ program }: { program: any }) {
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        post(`/dashboard/programs/${program.id}`, { forceFormData: true });
+        post(`/dashboard/programs/${program.id}`, {
+            forceFormData: true,
+            onError: (errors) => { console.error('CRUD Error:', errors); alert('Error: ' + JSON.stringify(errors)); },
+            onSuccess: () => console.log('CRUD Success'),
+        });
     };
 
     return (

@@ -38,7 +38,11 @@ export default function StoreProductEdit({ product }: { product: StoreProduct })
 
     function submit(e: React.FormEvent) {
         e.preventDefault();
-        post(`/dashboard/store-products/${product.id}`, { forceFormData: true });
+        post(`/dashboard/store-products/${product.id}`, {
+            forceFormData: true,
+            onError: (errors) => { console.error('CRUD Error:', errors); alert('Error: ' + JSON.stringify(errors)); },
+            onSuccess: () => console.log('CRUD Success'),
+        });
     }
 
     return (

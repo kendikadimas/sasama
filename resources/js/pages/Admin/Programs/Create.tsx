@@ -25,7 +25,11 @@ export default function ProgramCreate() {
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        post('/dashboard/programs', { forceFormData: true });
+        post('/dashboard/programs', {
+            forceFormData: true,
+            onError: (errors) => { console.error('CRUD Error:', errors); alert('Error: ' + JSON.stringify(errors)); },
+            onSuccess: () => console.log('CRUD Success'),
+        });
     };
 
     return (

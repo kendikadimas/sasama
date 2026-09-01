@@ -36,7 +36,11 @@ export default function BusinessCreate() {
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        post('/dashboard/businesses', { forceFormData: true });
+        post('/dashboard/businesses', {
+            forceFormData: true,
+            onError: (errors) => { console.error('CRUD Error:', errors); alert('Error: ' + JSON.stringify(errors)); },
+            onSuccess: () => console.log('CRUD Success'),
+        });
     };
 
     return (

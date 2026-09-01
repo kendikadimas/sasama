@@ -25,7 +25,11 @@ export default function DocumentationEdit({ documentation }: { documentation: an
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        post(`/dashboard/documentations/${documentation.id}`, { forceFormData: true });
+        post(`/dashboard/documentations/${documentation.id}`, {
+            forceFormData: true,
+            onError: (errors) => { console.error('CRUD Error:', errors); alert('Error: ' + JSON.stringify(errors)); },
+            onSuccess: () => console.log('CRUD Success'),
+        });
     };
 
     return (

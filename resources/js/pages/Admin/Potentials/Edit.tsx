@@ -89,7 +89,11 @@ export default function PotentialEdit({ potential, groups }: { potential: any; g
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        post(`/dashboard/potentials/${potential.id}`, { forceFormData: true });
+        post(`/dashboard/potentials/${potential.id}`, {
+            forceFormData: true,
+            onError: (errors) => { console.error('CRUD Error:', errors); alert('Error: ' + JSON.stringify(errors)); },
+            onSuccess: () => console.log('CRUD Success'),
+        });
     };
 
     return (
