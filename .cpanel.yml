@@ -1,7 +1,7 @@
 ---
 deployment:
   tasks:
-    - export DEPLOYPATH=$HOME/sasama
+    - export DEPLOYPATH=/home/ppkorma1/sasama
     - /usr/local/bin/composer install --no-dev --optimize-autoloader --quiet --working-dir=$DEPLOYPATH
     - $DEPLOYPATH/artisan migrate --force
     - $DEPLOYPATH/artisan config:cache
