@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Concerns\HandlesImageUpload;
 use App\Models\Potential;
 use App\Models\PotentialGroup;
 use Illuminate\Http\Request;
@@ -10,6 +11,7 @@ use Inertia\Inertia;
 
 class PotentialController extends Controller
 {
+    use \App\Http\Controllers\Concerns\HandlesImageUpload;
     public function index()
     {
         return Inertia::render('Admin/Potentials/Index', [
@@ -39,7 +41,7 @@ class PotentialController extends Controller
 
         $path = null;
         if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('potentials', 'public');
+            $path = $this->storeImage($request->file('image'), 'potentials');
         }
 
         Potential::create([
@@ -76,7 +78,7 @@ class PotentialController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            $potential->image_path = $request->file('image')->store('potentials', 'public');
+            $potential->image_path = $this->storeImage($request->file('image'), 'potentials');
         }
 
         $potential->update([

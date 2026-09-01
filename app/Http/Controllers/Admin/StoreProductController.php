@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Concerns\HandlesImageUpload;
 use App\Models\StoreProduct;
 use App\Models\StoreProductImage;
 use Illuminate\Http\Request;
@@ -11,6 +12,7 @@ use Inertia\Inertia;
 
 class StoreProductController extends Controller
 {
+    use \App\Http\Controllers\Concerns\HandlesImageUpload;
     public function index()
     {
         return Inertia::render('Admin/StoreProducts/Index', [
@@ -38,7 +40,7 @@ class StoreProductController extends Controller
 
         $path = null;
         if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('store', 'public');
+            $path = $this->storeImage($request->file('image'), 'store');
         }
 
         $product = StoreProduct::create([
@@ -54,7 +56,7 @@ class StoreProductController extends Controller
         if ($request->hasFile('extra_images')) {
             foreach ($request->file('extra_images') as $i => $file) {
                 $product->images()->create([
-                    'image_path' => $file->store('store', 'public'),
+                    'image_path' => $this->storeImage($file, 'store'),
                     'sort_order' => $i,
                 ]);
             }
@@ -86,7 +88,7 @@ class StoreProductController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            $storeProduct->image_path = $request->file('image')->store('store', 'public');
+            $storeProduct->image_path = $this->storeImage($request->file('image'), 'store');
         }
 
         $storeProduct->update([
@@ -109,7 +111,7 @@ class StoreProductController extends Controller
             $nextOrder = $storeProduct->images()->max('sort_order') + 1;
             foreach ($request->file('extra_images') as $i => $file) {
                 $storeProduct->images()->create([
-                    'image_path' => $file->store('store', 'public'),
+                    'image_path' => $this->storeImage($file, 'store'),
                     'sort_order' => $nextOrder + $i,
                 ]);
             }

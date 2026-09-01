@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Concerns\HandlesImageUpload;
 use App\Models\Documentation;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class DocumentationController extends Controller
 {
+    use \App\Http\Controllers\Concerns\HandlesImageUpload;
     public function index()
     {
         return Inertia::render('Admin/Documentations/Index', [
@@ -39,12 +41,12 @@ class DocumentationController extends Controller
                 'title'       => $request->input('title'),
                 'description' => $request->input('description'),
                 'taken_at'    => $request->input('taken_at'),
-                'image_path'  => $files[0]->store('documentations', 'public'),
+                'image_path'  => $this->storeImage($files[0], 'documentations'),
             ]);
 
             foreach (array_slice($files, 1) as $i => $file) {
                 $doc->images()->create([
-                    'image_path' => $file->store('documentations', 'public'),
+                    'image_path' => $this->storeImage($file, 'documentations'),
                     'sort_order' => $i + 1,
                 ]);
             }
@@ -65,7 +67,7 @@ class DocumentationController extends Controller
                 Documentation::create([
                     'title'      => $items[$i]['title'] ?? null,
                     'taken_at'   => $items[$i]['taken_at'] ?? null,
-                    'image_path' => $file->store('documentations', 'public'),
+                    'image_path' => $this->storeImage($file, 'documentations'),
                 ]);
             }
 
@@ -82,7 +84,7 @@ class DocumentationController extends Controller
                 'title'       => $request->input('title'),
                 'description' => $request->input('description'),
                 'taken_at'    => $request->input('taken_at'),
-                'image_path'  => $request->file('image')->store('documentations', 'public'),
+                'image_path'  => $this->storeImage($request->file('image'), 'documentations'),
             ]);
         }
 
@@ -106,7 +108,7 @@ class DocumentationController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            $documentation->image_path = $request->file('image')->store('documentations', 'public');
+            $documentation->image_path = $this->storeImage($request->file('image'), 'documentations');
         }
 
         $documentation->update([

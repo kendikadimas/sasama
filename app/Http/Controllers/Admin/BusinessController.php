@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Concerns\HandlesImageUpload;
 use App\Models\Business;
 use App\Models\BusinessImage;
 use Illuminate\Http\Request;
@@ -11,6 +12,7 @@ use Inertia\Inertia;
 
 class BusinessController extends Controller
 {
+    use \App\Http\Controllers\Concerns\HandlesImageUpload;
     public function index()
     {
         return Inertia::render('Admin/Businesses/Index', [
@@ -46,7 +48,7 @@ class BusinessController extends Controller
 
         $path = null;
         if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('businesses', 'public');
+            $path = $this->storeImage($request->file('image'), 'businesses');
         }
 
         $business = Business::create(array_merge(
@@ -57,7 +59,7 @@ class BusinessController extends Controller
         if ($request->hasFile('extra_images')) {
             foreach ($request->file('extra_images') as $i => $file) {
                 $business->images()->create([
-                    'image_path' => $file->store('businesses', 'public'),
+                    'image_path' => $this->storeImage($file, 'businesses'),
                     'sort_order' => $i,
                 ]);
             }
@@ -97,7 +99,7 @@ class BusinessController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            $business->image_path = $request->file('image')->store('businesses', 'public');
+            $business->image_path = $this->storeImage($request->file('image'), 'businesses');
         }
 
         $business->update(collect($validated)->except(['image', 'extra_images', 'delete_image_ids'])->toArray());
@@ -118,7 +120,7 @@ class BusinessController extends Controller
             $nextOrder = $business->images()->max('sort_order') + 1;
             foreach ($request->file('extra_images') as $i => $file) {
                 $business->images()->create([
-                    'image_path' => $file->store('businesses', 'public'),
+                    'image_path' => $this->storeImage($file, 'businesses'),
                     'sort_order' => $nextOrder + $i,
                 ]);
             }

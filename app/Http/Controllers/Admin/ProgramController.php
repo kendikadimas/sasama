@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Concerns\HandlesImageUpload;
 use App\Models\Program;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -10,6 +11,7 @@ use Inertia\Inertia;
 
 class ProgramController extends Controller
 {
+    use \App\Http\Controllers\Concerns\HandlesImageUpload;
     public function index()
     {
         return Inertia::render('Admin/Programs/Index', [
@@ -34,7 +36,7 @@ class ProgramController extends Controller
 
         $path = null;
         if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('programs', 'public');
+            $path = $this->storeImage($request->file('image'), 'programs');
         }
 
         Program::create([
@@ -67,7 +69,7 @@ class ProgramController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            $program->image_path = $request->file('image')->store('programs', 'public');
+            $program->image_path = $this->storeImage($request->file('image'), 'programs');
         }
 
         $program->update([
