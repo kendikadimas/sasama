@@ -62,7 +62,7 @@ const SECTOR_COLORS: Record<Sector, string> = {
 const CAPAIAN_STATS = [
     { icon: Users,       value: '3',        label: 'RW Sasaran Program' },
     { icon: CheckSquare, value: '50+',      label: 'Kegiatan Terlaksana' },
-    { icon: Recycle,     value: '2,3 Ton',  label: 'Sampah Terkelola' },
+    { icon: Recycle,     value: '2,3 Ton',  label: 'Target Sampah Terkelola' },
     { icon: Wallet,      value: 'Rp 5.000', label: 'Pengurangan Biaya Sampah/Minggu' },
     { icon: Users,       value: '100+',     label: 'Masyarakat Terlibat' },
 ];
