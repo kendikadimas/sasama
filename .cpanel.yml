@@ -6,5 +6,4 @@ deployment:
     - $DEPLOYPATH/artisan migrate --force
     - $DEPLOYPATH/artisan config:cache
     - $DEPLOYPATH/artisan view:cache
-    - cp -r $DEPLOYPATH/public/build $HOME/public_html/build
     - rm -f $HOME/public_html/hot
