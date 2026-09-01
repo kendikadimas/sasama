@@ -12,17 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('businesses', function (Blueprint $table) {
-            //
+            $table->string('halal_status', 100)->nullable()->after('tiktok_url');
+            $table->string('halal_cert_number')->nullable()->after('halal_status');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::table('businesses', function (Blueprint $table) {
-            //
+            $table->dropColumn(['halal_status', 'halal_cert_number']);
         });
     }
 };
