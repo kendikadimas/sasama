@@ -26,7 +26,7 @@ export default function ProgramEdit({ program }: { program: any }) {
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        post(`/dashboard/programs/${program.id}`);
+        post(`/dashboard/programs/${program.id}`, { forceFormData: true });
     };
 
     return (

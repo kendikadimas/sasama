@@ -38,7 +38,7 @@ export default function BusinessEdit({ business }: { business: any }) {
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        post(`/dashboard/businesses/${business.id}`);
+        post(`/dashboard/businesses/${business.id}`, { forceFormData: true });
     };
 
     return (

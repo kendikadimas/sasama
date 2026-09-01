@@ -24,7 +24,7 @@ export default function DocumentationCreate() {
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        post('/dashboard/documentations');
+        post('/dashboard/documentations', { forceFormData: true });
     };
 
     return (

@@ -36,7 +36,7 @@ export default function BusinessCreate() {
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        post('/dashboard/businesses');
+        post('/dashboard/businesses', { forceFormData: true });
     };
 
     return (

@@ -38,7 +38,7 @@ export default function StoreProductEdit({ product }: { product: StoreProduct })
 
     function submit(e: React.FormEvent) {
         e.preventDefault();
-        post(`/dashboard/store-products/${product.id}`);
+        post(`/dashboard/store-products/${product.id}`, { forceFormData: true });
     }
 
     return (

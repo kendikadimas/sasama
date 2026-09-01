@@ -25,7 +25,7 @@ export default function ProgramCreate() {
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        post('/dashboard/programs');
+        post('/dashboard/programs', { forceFormData: true });
     };
 
     return (
