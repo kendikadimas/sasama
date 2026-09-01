@@ -135,7 +135,7 @@ export default function Home({ programs, documentations }: HomeProps) {
                                 DESA BOJONGJENGKOL
                             </h1>
                             <p className="mb-6 text-lg leading-relaxed text-white/75">
-                                Bersama SASAMA, wujudkan desa cerdas sampah<br className="hidden sm:block" />
+                                Bersama SASAMA, wujudkan desa cerdas sampah <br className="hidden sm:block" />
                                 yang mandiri, bersih, dan berdaya.
                             </p>
                             <Link
@@ -220,7 +220,7 @@ export default function Home({ programs, documentations }: HomeProps) {
                                         <img
                                             src={`/storage/${program.image_path}`}
                                             alt={program.title}
-                                            className="h-44 w-full object-cover"
+                                            className="h-44 w-full object-contain bg-white p-2"
                                         />
                                     ) : (
                                         <div className="flex h-44 w-full items-center justify-center bg-emerald-50">
