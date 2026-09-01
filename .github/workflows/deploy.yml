@@ -9,12 +9,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: actions/setup-node@v4
         with:
           node-version: 20
 
       - run: npm ci && npm run build
+
+      - name: Commit build assets
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add -f public/build
+          git diff --cached --quiet || git commit -m "ci: update build assets [skip ci]"
+          git push
 
       - name: Trigger cPanel Git Deploy
         run: |
