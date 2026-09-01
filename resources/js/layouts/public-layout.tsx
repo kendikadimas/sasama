@@ -19,17 +19,27 @@ export default function PublicLayout({ children }: PropsWithChildren) {
         <div className="flex min-h-screen flex-col">
             <nav className="fixed inset-x-0 top-0 z-50 bg-white shadow-sm">
                 <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
-                    <Link href="/" className="flex items-center gap-3">
+                    <Link href="/" className="flex items-center gap-2">
                         <img
                             src="/assets/logo/tegar beriman.png"
-                            alt="Logo Kabupaten Bogor"
+                            alt="Logo Desa Bojongjengkol"
+                            className="h-10 w-10 object-contain"
+                        />
+                        <img
+                            src="/assets/logo/Logo SASAMA.png"
+                            alt="Logo SASAMA"
+                            className="h-10 w-10 object-contain"
+                        />
+                        <img
+                            src="/assets/logo/bemfem.PNG"
+                            alt="Logo BEM FEM"
                             className="h-10 w-10 object-contain"
                         />
                         <div className="flex flex-col leading-tight">
                             <span className="text-sm font-bold text-slate-700">
                                 Desa Bojongjengkol
                             </span>
-                            <span className="text-[10px] font-semibold uppercase  text-emerald-700">
+                            <span className="text-[10px] font-semibold uppercase text-emerald-700">
                                 Desa Cerdas Sampah
                             </span>
                         </div>
