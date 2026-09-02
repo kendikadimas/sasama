@@ -409,7 +409,10 @@ export default function Mitra({ businesses, categories, featured, storeProducts 
             <section className="bg-white px-4 pb-14">
                 <div className="mx-auto max-w-6xl">
                     <div className="mb-8 h-px bg-slate-100" />
-                    <img src="/assets/logo/program/LOGO SASAMA STORE.png" alt="SASAMA Store" className="mb-8 h-16 object-contain" />
+                    <div className="mb-4 flex items-center gap-4">
+                        <img src="/assets/logo/program/LOGO SASAMA STORE.png" alt="SASAMA Store" className="h-16 w-auto object-contain" />
+                        <h2 className="text-3xl font-bold text-slate-800 font-serif">SASAMA Store</h2>
+                    </div>
                     <p className="mb-8 max-w-xl text-sm text-slate-500">
                         Dukung produk lokal hasil karya masyarakat Desa Bojongjengkol.
                         Belanja sambil berkontribusi untuk desa yang lebih maju!
