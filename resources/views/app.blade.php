@@ -33,8 +33,8 @@
 
     <title inertia>{{ config('app.name', 'Laravel') }}</title>
 
-    <link rel="icon" href="/favicon.ico">
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="icon" href="/assets/logo/Logo SASAMA.png" type="image/png">
+    <link rel="apple-touch-icon" href="/assets/logo/Logo SASAMA.png">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
